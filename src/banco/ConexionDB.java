@@ -27,10 +27,10 @@ public class ConexionDB {
 		//se genera el string que define los datos de la conexión 
 		 try {  
             String servidor = "localhost:3306";
-            String baseDatos = "banco";
-            String usuario = "admin";
+            String baseDatos = "login";
+            String usuario = "maestro";
             String clave = "pwadmin";
-            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=UTC&useSSL=false";
+            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=UTC"; //&useSSL=false
             
             //se intenta establecer la conexión
             this.conexionBD = DriverManager.getConnection(uriConexion, usuario, clave);
@@ -48,6 +48,11 @@ public class ConexionDB {
 			instance = new ConexionDB();
 			
 		return instance;
+	}
+	
+	
+	public Connection getConexion() {
+		return conexionBD;
 	}
 	
 	public ResultSet consulta(String sql ) {
