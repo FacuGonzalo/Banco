@@ -49,9 +49,7 @@ public class login {
 	 */
 	private void initialize() {
 		
-		final ConexionDB conect = null; 
-		
-		
+		final ConexionDB conect = ConexionDB.getIntance(); 
 		
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Carlito", Font.PLAIN, 43));
@@ -90,22 +88,31 @@ public class login {
 			@SuppressWarnings("null")
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					conect.getIntance();
-					Statement stmt = conect.getConexion().createStatement();
+					System.out.println("aca llego");
 					
 					//Class.forName("com.mysql.jdbc.Driver");
-					//Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/login","root","");
+					//Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/login","maestro","pwadmin");
 					//Statement stmt = con.createStatement();
-					String sql = "SELECT * from usuarios WHERE nombre='"+ usuario.getText()+"' AND password='"+contraseña.getText()+"'";
-					ResultSet rs = stmt.executeQuery(sql);
-					if (rs.next())
-						JOptionPane.showMessageDialog(null, "FELIZ CUMPLEAÑOS FACAAAAA ");
-					else
-						JOptionPane.showMessageDialog(null, "LA AS CAGADO.....");
 					
+					String sql = "SELECT * from usuarios WHERE nombre='"+ usuario.getText()+"' AND password='"+contraseña.getText()+"'";
+					
+					//Statement stmt = conect.getConexion().createStatement();
+					//ResultSet rs = stmt.executeQuery(sql);
+					
+					
+					ResultSet rs = conect.consulta(sql);
+					if (rs.next())
+						JOptionPane.showMessageDialog(null, "CONECTO, AGUANTE LA FAFAFAFA");
+					else
+						JOptionPane.showMessageDialog(null, "ERRADO MAQUINOLA ");
+						
+					
+					rs.close();
+			        //stmt.close();
+						
 				} 
 				catch (Exception e) {
-					System.out.print("tu viejaaaa");
+					System.out.print(e);
 				}
 				
 			}

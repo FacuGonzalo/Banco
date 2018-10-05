@@ -2,14 +2,13 @@ package banco;
 
 public class ATM {
 	
-	protected ConexionDB conect;
+	final ConexionDB conect;
 	
 	public  ATM (){
-		conect.getIntance();
+		conect = ConexionDB.getIntance();
 	}
 	
 	public boolean ingresar (int nroTarjeta, int pin) {
-		
 		return true;
 	}
 	

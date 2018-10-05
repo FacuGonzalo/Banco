@@ -1,5 +1,6 @@
 package banco;
 
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,7 +9,7 @@ import java.sql.Statement;
 
 public class ConexionDB {
 	
-	private ConexionDB instance = null;
+	private static ConexionDB instance = null;
 	
 	protected Connection conexionBD = null;
 	
@@ -27,9 +28,9 @@ public class ConexionDB {
 		//se genera el string que define los datos de la conexión 
 		 try {  
             String servidor = "localhost:3306";
-            String baseDatos = "login";
-            String usuario = "maestro";
-            String clave = "pwadmin";
+            String baseDatos = "banco";
+            String usuario = "admin";
+            String clave = "admin";
             String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=UTC"; //&useSSL=false
             
             //se intenta establecer la conexión
@@ -42,7 +43,7 @@ public class ConexionDB {
          }
 	}
 
-	public ConexionDB getIntance() {
+	public static ConexionDB getIntance() {
 
 		if (instance == null) 
 			instance = new ConexionDB();
@@ -55,18 +56,18 @@ public class ConexionDB {
 		return conexionBD;
 	}
 	
-	public ResultSet consulta(String sql ) {
+	public ResultSet consulta(String sql) {
 		try {
 	         // se crea una sentencia o comando jdbc para realizar la consulta 
 	    	 // a partir de la coneccion establecida (conexionBD)
-	         Statement stmt = this.conexionBD.createStatement();
+	         Statement stmt = conexionBD.createStatement();
 
 	         // se ejecuta la sentencia y se recibe un resultset
 	         ResultSet rs = stmt.executeQuery(sql);    
 	        
 	         // se cierran los recursos utilizados 
-	         rs.close();
-	         stmt.close();
+	         //rs.close();
+	         //stmt.close();
 	         
 	         return rs;
 	      }
