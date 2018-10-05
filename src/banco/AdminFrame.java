@@ -5,11 +5,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -28,6 +33,7 @@ import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 
 import javax.swing.JPanel;
@@ -37,7 +43,9 @@ import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 
+
 import quick.dbtable.*;
+import javax.swing.JList;
 
 public class AdminFrame {
 
@@ -47,6 +55,9 @@ public class AdminFrame {
 	
 	private DBTable tabla;
 	private JButton btnTirarConsulta;
+	private JList tablaLista;
+	
+	protected Connection conexionBD = null;
 
 	/**
 	 * Launch the application.
@@ -82,7 +93,7 @@ public class AdminFrame {
 		
 		
 		frame = new JFrame();
-		frame.setBounds(100, 100, 745, 430);
+		frame.setBounds(100, 100, 800, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -97,12 +108,13 @@ public class AdminFrame {
           });
 		
 		JPanel pnlConsulta = new JPanel();
-		pnlConsulta.setBounds(0, 0, 729, 212);
+		pnlConsulta.setBounds(0, 0, 774, 212);
 		frame.getContentPane().add(pnlConsulta);
 		pnlConsulta.setLayout(null);
 		
 		consultPane = new JTextField();
-		consultPane.setBounds(10, 68, 571, 138);
+		consultPane.setHorizontalAlignment(SwingConstants.CENTER);
+		consultPane.setBounds(10, 68, 620, 138);
 		pnlConsulta.add(consultPane);
 		consultPane.setColumns(10);
 		
@@ -113,14 +125,23 @@ public class AdminFrame {
 		lblAdminPanel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		btnTirarConsulta = new JButton("CONSULTAR");
-		btnTirarConsulta.setBounds(595, 68, 124, 33);
+		btnTirarConsulta.setBounds(640, 68, 124, 33);
 		pnlConsulta.add(btnTirarConsulta);
 		btnTirarConsulta.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		DBTable tabla_1 = new DBTable();
-		tabla_1.setBounds(10, 223, 709, 167);
-		frame.getContentPane().add(tabla_1);
-		tabla_1.setEditable(false);
+		tabla = new DBTable();
+		tabla.setBounds(10, 223, 573, 427);
+		frame.getContentPane().add(tabla);
+		tabla.setEditable(false);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(593, 223, 181, 427);
+		frame.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		tablaLista = new JList();
+		tablaLista.setBounds(174, 420, -166, -415);
+		panel.add(tablaLista);
 		
 		btnTirarConsulta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -135,6 +156,10 @@ public class AdminFrame {
 	}
 	
 	private void conectarBD() {
+		
+		if (this.conexionBD == null) {
+	      
+		
 		try {
 			String driver ="com.mysql.cj.jdbc.Driver";
 			String servidor = "localhost:3306";
@@ -145,6 +170,27 @@ public class AdminFrame {
 		   
 		            //establece una conexión con la  B.D. "batallas"  usando directamante una tabla DBTable    
 		    tabla.connectDatabase(driver, uriConexion, usuario, clave);
+		    
+		    this.conexionBD = DriverManager.getConnection(uriConexion, usuario, clave);
+		    
+		    DefaultListModel model = new DefaultListModel(); //create a new list model
+
+		    String sql = new String("select * from empleado");
+		    
+		    Statement statement = conexionBD.createStatement();
+		    ResultSet resultSet = statement.executeQuery(sql); //run your query
+
+		    while (resultSet.next()) //go through each row that your query returns
+		    {
+		        String itemCode = resultSet.getString("item_code"); //get the element in column "item_code"
+		        model.addElement(itemCode); //add each item to the model
+		    }
+		    tablaLista.setModel(model);
+
+		    resultSet.close();
+		    statement.close();
+		    
+		    
 		   
 		 }
 		 catch (SQLException ex) {
@@ -159,6 +205,8 @@ public class AdminFrame {
 		 catch (ClassNotFoundException e) {
 		    e.printStackTrace();
 		 }
+		
+		}
 	      
 	}
 	
