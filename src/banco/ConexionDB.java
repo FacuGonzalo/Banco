@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ConexionDB {
+	//comentario
 	
 	private static ConexionDB instance = null;
 	

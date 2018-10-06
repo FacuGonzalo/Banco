@@ -23,6 +23,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class login {
+	
+	//comentario
 
 	private JFrame frame;
 	private JTextField usuario;

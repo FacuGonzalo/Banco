@@ -52,6 +52,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.JScrollBar;
 
 public class AdminFrame {
+	
+	//comentario
 
 	JFrame frame;
 	private JTextField consultPane;

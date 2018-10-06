@@ -6,6 +6,9 @@ import java.sql.Statement;
 
 public class ATM {
 	
+	//comentario
+	//otro comment
+	
 	final ConexionDB conect;
 	
 	public  ATM() {

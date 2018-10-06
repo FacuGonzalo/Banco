@@ -1,6 +1,8 @@
 package banco;
 
 public class Admin {
+	
+	//comentario
 
 	final ConexionDB conect;
 	
