@@ -66,10 +66,14 @@ public class ConexionDB {
 	         ResultSet rs = stmt.executeQuery(sql);    
 	        
 	         // se cierran los recursos utilizados 
+	         
 	         //rs.close();
 	         //stmt.close();
 	         
 	         return rs;
+	         
+	         
+	         
 	      }
 		
 	      catch (SQLException ex) {

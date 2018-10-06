@@ -1,4 +1,4 @@
-package banco;
+package GUI;
 
 import java.awt.EventQueue;
 
@@ -10,10 +10,17 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.SwingConstants;
+
+import banco.ATM;
+import banco.ConexionDB;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class login {
 
@@ -43,12 +50,42 @@ public class login {
 	public login() {
 		initialize();
 	}
+	
+	private static final char[] CONSTS_HEX = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+	
+    public static String getMD5(String stringAEncriptar)
+    {
+        try
+        {
+           MessageDigest msgd = MessageDigest.getInstance("MD5");
+           byte[] bytes = msgd.digest(stringAEncriptar.getBytes());
+           StringBuilder strbCadenaMD5 = new StringBuilder(2 * bytes.length);
+           for (int i = 0; i < bytes.length; i++)
+           {
+               int bajo = (int)(bytes[i] & 0x0f);
+               int alto = (int)((bytes[i] & 0xf0) >> 4);
+               strbCadenaMD5.append(CONSTS_HEX[alto]);
+               strbCadenaMD5.append(CONSTS_HEX[bajo]);
+           }
+           return strbCadenaMD5.toString();
+        } catch (NoSuchAlgorithmException e) {
+           return null;
+        }
+    }
+	
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		
+		 ATM cajero = new ATM ();
+		 
+		 System.out.println(cajero.ingresar("2",getMD5("2222")));
+		
+		 System.out.println(cajero.consultarSaldo("2"));
+		 System.out.println(cajero.consultarSaldo("4"));
+		 
 		final ConexionDB conect = ConexionDB.getIntance(); 
 		
 		frame = new JFrame();
@@ -90,12 +127,13 @@ public class login {
 				try {
 					System.out.println("aca llego");
 					
+					
 					//Class.forName("com.mysql.jdbc.Driver");
 					//Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/login","maestro","pwadmin");
 					//Statement stmt = con.createStatement();
 					
-					String sql = "SELECT * from usuarios WHERE nombre='"+ usuario.getText()+"' AND password='"+contraseña.getText()+"'";
-					
+					//String sql = "SELECT * from usuarios WHERE nombre='"+ usuario.getText()+"' AND password='"+contraseña.getText()+"'";
+					String sql = "SELECT * from tarjeta WHERE nro_tarjeta='"+"2" +"' AND pin='"+getMD5("2222")+"'";
 					//Statement stmt = conect.getConexion().createStatement();
 					//ResultSet rs = stmt.executeQuery(sql);
 					
@@ -107,7 +145,7 @@ public class login {
 						JOptionPane.showMessageDialog(null, "ERRADO MAQUINOLA ");
 						
 					
-					rs.close();
+					//rs.close();
 			        //stmt.close();
 						
 				} 
