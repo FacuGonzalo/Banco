@@ -46,16 +46,19 @@ import javax.swing.border.BevelBorder;
 
 import quick.dbtable.*;
 import javax.swing.JList;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import javax.swing.AbstractListModel;
+import javax.swing.JScrollBar;
 
 public class AdminFrame {
 
 	JFrame frame;
 	private JTextField consultPane;
-	
-	
 	private DBTable tabla;
 	private JButton btnTirarConsulta;
-	private JList tablaLista;
+	
+	JList<String> tablaLista = new JList<String>();
 	
 	protected Connection conexionBD = null;
 
@@ -134,14 +137,12 @@ public class AdminFrame {
 		frame.getContentPane().add(tabla);
 		tabla.setEditable(false);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(593, 223, 181, 427);
-		frame.getContentPane().add(panel);
-		panel.setLayout(null);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(593, 223, 181, 427);
+		frame.getContentPane().add(scrollPane);
 		
-		tablaLista = new JList();
-		tablaLista.setBounds(174, 420, -166, -415);
-		panel.add(tablaLista);
+		
+		scrollPane.setViewportView(tablaLista);
 		
 		btnTirarConsulta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -173,19 +174,20 @@ public class AdminFrame {
 		    
 		    this.conexionBD = DriverManager.getConnection(uriConexion, usuario, clave);
 		    
-		    DefaultListModel model = new DefaultListModel(); //create a new list model
-
-		    String sql = new String("select * from empleado");
+		    DefaultListModel<String> model = new DefaultListModel<String>(); //create a new list model
+		    tablaLista.setModel(model);
+		    
+		    String sql = new String("SHOW TABLES;");
 		    
 		    Statement statement = conexionBD.createStatement();
 		    ResultSet resultSet = statement.executeQuery(sql); //run your query
-
+		    
 		    while (resultSet.next()) //go through each row that your query returns
 		    {
-		        String itemCode = resultSet.getString("item_code"); //get the element in column "item_code"
-		        model.addElement(itemCode); //add each item to the model
+		        String nmbTabla = resultSet.getString("Tables_in_banco"); //get the element in column "item_code"
+		        model.addElement(nmbTabla); //add each item to the model
 		    }
-		    tablaLista.setModel(model);
+		    
 
 		    resultSet.close();
 		    statement.close();
@@ -194,10 +196,9 @@ public class AdminFrame {
 		   
 		 }
 		 catch (SQLException ex) {
-		     /*JOptionPane.showMessageDialog(this,
-		                                   "Se produjo un error al intentar conectarse a la base de datos.\n" + ex.getMessage(),
+		     JOptionPane.showMessageDialog(btnTirarConsulta, "Se produjo un error al intentar conectarse a la base de datos.\n" + ex.getMessage(),
 		                                   "Error",
-		                                   JOptionPane.ERROR_MESSAGE);*/
+		                                   JOptionPane.ERROR_MESSAGE);
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("VendorError: " + ex.getErrorCode());
