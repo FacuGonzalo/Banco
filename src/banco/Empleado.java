@@ -2,6 +2,8 @@ package banco;
 
 public class Empleado {
 	
+	//comentario
+	
 protected ConexionDB conect;
 	
 	public  Empleado (){

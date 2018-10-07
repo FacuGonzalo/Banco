@@ -7,7 +7,7 @@ import java.sql.Statement;
 public class ATM {
 	
 	//comentario
-	//otro comment
+	//otro commen
 	
 	final ConexionDB conect;
 	
