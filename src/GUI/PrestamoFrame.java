@@ -122,11 +122,17 @@ public class PrestamoFrame extends JFrame {
 		fecha_hoy = Fechas.convertirDateAStringDB(hoy);
 		
 		try{
-		String sql = "SELECT pr.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido, pa.nro_prestamo, pr.monto, pr.cant_meses, pr.valor_cuota, COUNT(p.nro_prestamo) " +
+		String sql = "SELECT pr.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido, pa.nro_prestamo, pr.monto, pr.cant_meses, pr.valor_cuota, COUNT(pr.nro_prestamo) " +
 	         		 "FROM  prestamo as pr, pago as pa, cliente as c WHERE pr.nro_cliente = c.nro_cliente and pa.nro_prestamo = pr.nro_prestamo and fecha_pago = NULL and fecha_venc < '"+fecha_hoy+"' " +
 	         		 "GROUP BY nro_prestamo;";
 		Statement stmt = conect.getConexion().createStatement();
 		ResultSet rs = stmt.executeQuery(sql);
+		
+		if (rs.next())
+			System.out.println("Encontro");
+		else
+			System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+			
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}

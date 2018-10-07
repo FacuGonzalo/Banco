@@ -51,7 +51,7 @@ import java.awt.Color;
 import javax.swing.AbstractListModel;
 import javax.swing.JScrollBar;
 
-public class AdminFrame {
+public class AdminFrame  extends JFrame {
 	
 	//comentario
 
@@ -64,27 +64,6 @@ public class AdminFrame {
 	
 	protected Connection conexionBD = null;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AdminFrame window = new AdminFrame();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-			
-	
-
-	/**
-	 * Create the application.
-	 */
 	public AdminFrame() {
 		initialize();
 	}

@@ -44,6 +44,10 @@ public class ConexionDB {
          }
 	}
 
+	
+	
+	
+	
 	public static ConexionDB getIntance() {
 
 		if (instance == null) 

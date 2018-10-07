@@ -21,30 +21,19 @@ import java.awt.event.ActionEvent;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.swing.JPasswordField;
 
-public class login {
+@SuppressWarnings("serial")
+public class login extends JFrame {
 	
 	//comentario
 
 	private JFrame frame;
 	private JTextField usuario;
-	private JTextField contraseña;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					login window = new login();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -54,6 +43,7 @@ public class login {
 	}
 	
 	private static final char[] CONSTS_HEX = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+	private JPasswordField passwordField;
 	
     public static String getMD5(String stringAEncriptar)
     {
@@ -117,11 +107,6 @@ public class login {
 		lblContrasea.setBounds(10, 120, 78, 14);
 		frame.getContentPane().add(lblContrasea);
 		
-		contraseña = new JTextField();
-		contraseña.setBounds(20, 137, 161, 20);
-		frame.getContentPane().add(contraseña);
-		contraseña.setColumns(10);
-		
 		JButton btnIngresar = new JButton("Ingresar");
 		btnIngresar.addActionListener(new ActionListener() {
 			@SuppressWarnings("null")
@@ -147,7 +132,7 @@ public class login {
 						JOptionPane.showMessageDialog(null, "ERRADO MAQUINOLA ");
 						
 					
-					//rs.close();
+					rs.close();
 			        //stmt.close();
 						
 				} 
@@ -159,5 +144,9 @@ public class login {
 		});
 		btnIngresar.setBounds(55, 186, 89, 23);
 		frame.getContentPane().add(btnIngresar);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(20, 145, 161, 20);
+		frame.getContentPane().add(passwordField);
 	}
 }
