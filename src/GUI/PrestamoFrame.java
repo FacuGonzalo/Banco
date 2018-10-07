@@ -27,6 +27,7 @@ public class PrestamoFrame extends JFrame {
 	final ConexionDB conect;
 	
 	private Connection conexionDataBase = null;
+	private JScrollPane scrollPane;
 	
 	public PrestamoFrame(){
 		super();
@@ -36,21 +37,21 @@ public class PrestamoFrame extends JFrame {
 	}
 	
 	private void initGUI() {
-			setBounds(200, 200, 600, 401);
+			setBounds(200, 200, 679, 497);
 			panel = new JPanel();
 			setContentPane(panel);
 			panel.setLayout(null);
 			
 			panel_cliente = new JPanel();
-			panel_cliente.setBounds(0, 0, 584, 281);
+			panel_cliente.setBounds(362, 0, 291, 349);
 			panel.add(panel_cliente);
 			panel_cliente.setVisible(false);
 			panel_creacion = new JPanel();
-			panel_creacion.setBounds(0, 0, 584, 281);
+			panel_creacion.setBounds(0, 0, 352, 281);
 			panel.add(panel_creacion);
 			panel_creacion.setVisible(false);
 			panel_pago = new JPanel();
-			panel_pago.setBounds(0, 0, 584, 281);
+			panel_pago.setBounds(0, 0, 287, 281);
 			panel.add(panel_pago);
 			panel_pago.setVisible(false);
 			
@@ -61,9 +62,14 @@ public class PrestamoFrame extends JFrame {
 			panel_pago.setBackground(Color.red);
 			panel_creacion.setBackground(Color.green);
 			panel_cliente.setBackground(Color.BLUE);
+			panel_cliente.setLayout(null);
+			
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(10, 11, 271, 287);
+			panel_cliente.add(scrollPane);
 			
 			panel_consulta = new JPanel();
-			panel_consulta.setBounds(70, 283, 434, 79);
+			panel_consulta.setBounds(96, 368, 434, 79);
 			
 			btn_crear = new JButton("Crear prestamo");
 			btn_crear.addActionListener(new ActionListener() {
