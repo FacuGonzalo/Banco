@@ -11,49 +11,62 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import banco.ATM;
+
 import banco.ConexionDB;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.math.BigInteger;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.swing.JPasswordField;
+import java.awt.BorderLayout;
 
 @SuppressWarnings("serial")
 public class login extends JFrame {
 	
-	//comentario
 
-	private JFrame frame;
-	private JTextField usuario;
+	//private JFrame frame;
+	private JPasswordField password;	
+	private JTextField id;
+		
+	private JLabel lblLogin; 
+	private JLabel lblUsuario;
+	private JLabel lblContrasenia;
 
-	/**
-	 * Launch the application.
-	 */
+	private JButton btnIngresar;
+		
+	@SuppressWarnings("unused")
+	private AdminFrame adm;
+	private ATMFrame atm;
+	
+	//private final Banco Bank;
+	
+	final ConexionDB conect = ConexionDB.getIntance(); 
 
-	/**
-	 * Create the application.
-	 */
 	public login() {
-		initialize();
+		
+        this.setSize(220, 300);
+        this.setLocation(350, 300);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null);
+        this.setVisible(true);
+	
+        //initialize();
+        initializeATM();
 	}
 	
-	private static final char[] CONSTS_HEX = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
-	private JPasswordField passwordField;
 	
-    public static String getMD5(String stringAEncriptar)
-    {
-        try
-        {
+	private static final char[] CONSTS_HEX = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+	
+    public static String getMD5(String stringAEncriptar) {
+        try {
            MessageDigest msgd = MessageDigest.getInstance("MD5");
            byte[] bytes = msgd.digest(stringAEncriptar.getBytes());
            StringBuilder strbCadenaMD5 = new StringBuilder(2 * bytes.length);
-           for (int i = 0; i < bytes.length; i++)
-           {
+           for (int i = 0; i < bytes.length; i++) {
                int bajo = (int)(bytes[i] & 0x0f);
                int alto = (int)((bytes[i] & 0xf0) >> 4);
                strbCadenaMD5.append(CONSTS_HEX[alto]);
@@ -70,83 +83,133 @@ public class login extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		 						
+		lblLogin = new JLabel();
+		lblUsuario = new JLabel();
+		lblContrasenia = new JLabel();
 		
-		 ATM cajero = new ATM ();
-		 
-		 System.out.println(cajero.ingresar("2",getMD5("2222")));
+		password = new JPasswordField();
+		id = new JTextField();
 		
-		 System.out.println(cajero.consultarSaldo("2"));
-		 System.out.println(cajero.consultarSaldo("4"));
-		 
-		final ConexionDB conect = ConexionDB.getIntance(); 
+		btnIngresar = new JButton("Ingresar");
+	
 		
-		frame = new JFrame();
-		frame.getContentPane().setFont(new Font("Carlito", Font.PLAIN, 43));
-		frame.setBounds(100, 100, 220, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
-		JLabel lblLogin = new JLabel("login rancio");
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
-		lblLogin.setFont(new Font("Comic Sans MS", Font.PLAIN, 30));
-		lblLogin.setBounds(10, 11, 184, 54);
-		frame.getContentPane().add(lblLogin);
+		lblLogin.setFont(new Font("Yu Gothic Medium", Font.BOLD, 24));
+		lblLogin.setBounds(10, 11, 174, 54);
+		this.getContentPane().add(lblLogin);		
 		
-		JLabel lblUsuario = new JLabel("Usuario");
-		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUsuario.setBounds(10, 76, 56, 14);
-		frame.getContentPane().add(lblUsuario);
+		lblUsuario.setHorizontalAlignment(SwingConstants.LEFT);
+		lblUsuario.setBounds(20, 65, 117, 14);
+		this.getContentPane().add(lblUsuario);		
 		
-		usuario = new JTextField();
-		usuario.setBounds(20, 89, 161, 20);
-		frame.getContentPane().add(usuario);
-		usuario.setColumns(10);
+		lblContrasenia.setHorizontalAlignment(SwingConstants.LEFT);
+		lblContrasenia.setBounds(20, 118, 117, 14);
+		this.getContentPane().add(lblContrasenia);
 		
-		JLabel lblContrasea = new JLabel("Contrase\u00F1a");
-		lblContrasea.setHorizontalAlignment(SwingConstants.CENTER);
-		lblContrasea.setBounds(10, 120, 78, 14);
-		frame.getContentPane().add(lblContrasea);
+		password.setBounds(20, 143, 161, 20);
+		this.getContentPane().add(password);
 		
-		JButton btnIngresar = new JButton("Ingresar");
+		id.setBounds(20, 87, 161, 20);
+		this.getContentPane().add(id);
+		id.setColumns(10);
+		
+		btnIngresar.setBounds(20, 187, 161, 23);
+		this.getContentPane().add(btnIngresar);
+		
 		btnIngresar.addActionListener(new ActionListener() {
 			@SuppressWarnings("null")
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					System.out.println("aca llego");
-					
-					
-					//Class.forName("com.mysql.jdbc.Driver");
-					//Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/login","maestro","pwadmin");
-					//Statement stmt = con.createStatement();
-					
-					//String sql = "SELECT * from usuarios WHERE nombre='"+ usuario.getText()+"' AND password='"+contraseña.getText()+"'";
-					String sql = "SELECT * from tarjeta WHERE nro_tarjeta='"+"2" +"' AND pin='"+getMD5("2222")+"'";
-					//Statement stmt = conect.getConexion().createStatement();
-					//ResultSet rs = stmt.executeQuery(sql);
-					
-					
-					ResultSet rs = conect.consulta(sql);
-					if (rs.next())
-						JOptionPane.showMessageDialog(null, "CONECTO, AGUANTE LA FAFAFAFA");
-					else
-						JOptionPane.showMessageDialog(null, "ERRADO MAQUINOLA ");
-						
-					
-					rs.close();
-			        //stmt.close();
-						
-				} 
-				catch (Exception e) {
-					System.out.print(e);
-				}
 				
+					String passString = new String(password.getPassword());
+					
+						if (conect.ingresarATM(id.getText(),passString)) {
+							accederAdmin();
+						}
+				}
+				catch (SQLException ex) {
+			
+		            System.out.println("SQLException: " + ex.getMessage());
+		            System.out.println("SQLState: " + ex.getSQLState());
+		            System.out.println("VendorError: " + ex.getErrorCode());
+		         }
 			}
 		});
-		btnIngresar.setBounds(55, 186, 89, 23);
-		frame.getContentPane().add(btnIngresar);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(20, 145, 161, 20);
-		frame.getContentPane().add(passwordField);
+		
 	}
+	
+	private void initializeATM() {
+			
+		lblLogin = new JLabel("ATM");
+		lblUsuario = new JLabel("Nro De Tarjeta");
+		lblContrasenia = new JLabel("PIN de la Tarjeta");
+		
+		password = new JPasswordField();
+		id = new JTextField();
+		
+		btnIngresar = new JButton("Ingresar");
+	
+		
+		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLogin.setFont(new Font("Yu Gothic Medium", Font.BOLD, 24));
+		lblLogin.setBounds(10, 11, 174, 54);
+		this.getContentPane().add(lblLogin);		
+		
+		lblUsuario.setHorizontalAlignment(SwingConstants.LEFT);
+		lblUsuario.setBounds(20, 65, 117, 14);
+		this.getContentPane().add(lblUsuario);		
+		
+		lblContrasenia.setHorizontalAlignment(SwingConstants.LEFT);
+		lblContrasenia.setBounds(20, 118, 117, 14);
+		this.getContentPane().add(lblContrasenia);
+		
+		password.setBounds(20, 143, 161, 20);
+		this.getContentPane().add(password);
+		
+		id.setBounds(20, 87, 161, 20);
+		this.getContentPane().add(id);
+		id.setColumns(10);
+		
+		btnIngresar.setBounds(20, 187, 161, 23);
+		this.getContentPane().add(btnIngresar);
+		
+		btnIngresar.addActionListener(new ActionListener() {
+			@SuppressWarnings("null")
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+				
+					String passString = new String(password.getPassword());
+					
+						if (conect.ingresarATM(id.getText(),getMD5(passString))) {
+							accederATM();
+						}
+				}
+				catch (SQLException ex) {
+			
+		            System.out.println("SQLException: " + ex.getMessage());
+		            System.out.println("SQLState: " + ex.getSQLState());
+		            System.out.println("VendorError: " + ex.getErrorCode());
+		         }
+			}
+		});
+		
+		
+	}
+	
+	public void accederAdmin () {
+		this.setVisible(false);
+		 adm = new AdminFrame(conect.getConexion());
+		 //adm.setVisible(true);
+		
+	}
+	public void accederATM () {
+		this.setVisible(false);
+		 atm = new ATMFrame(conect.getConexion());
+		 //adm.setVisible(true);
+		
+	}
+	
+
 }

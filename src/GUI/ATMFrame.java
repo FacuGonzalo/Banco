@@ -1,15 +1,11 @@
 package GUI;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.event.CaretEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -28,40 +24,55 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import banco.Fechas;
 
-public class ATMFrame {
+public class ATMFrame  extends JFrame{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	private JFrame frame;
+	private JPanel panel;
+	
+	private JScrollPane scrTabla;
+	
+	private JButton btnUltMov;
+	
+	private JButton btnConsultSaldo;
+	
 	private JTable tabla;
 
 	
-	protected Connection conexionBD = null;
+	
 	private JTextField FechaIni;
 	private JTextField FechaFin;
 	
+	protected Connection conexionBD;
 	
-	private Fechas ini = new Fechas ();  
 
 	/**
 	 * Launch the application.
 	 */
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ATMFrame window = new ATMFrame();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ATMFrame window = new ATMFrame();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
 	 */
-	public ATMFrame() {
+	public ATMFrame(Connection conexion) {
+		
+		super();
+		conexionBD = conexion;
 		initialize();
 	}
 	
@@ -71,34 +82,41 @@ public class ATMFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 700, 400);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+	
+		this.setBounds(100, 100, 700, 400);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setLayout(new BorderLayout(0, 0));
+		this.setVisible(true);
 		
 		
-		frame.addComponentListener(new ComponentAdapter() {
+		/*this.addComponentListener(new ComponentAdapter() {
             public void componentHidden(ComponentEvent evt) {
                 thisComponentHidden(evt);
              }
              public void componentShown(ComponentEvent evt) {
                 thisComponentShown(evt);
              }
-          });
+        });*/
 		
 		
 		
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		panel = new JPanel();
 		panel.setLayout(null);
+		this.getContentPane().add(panel, BorderLayout.CENTER);
 		
-		JButton btnConsultSaldo = new JButton("Consultar Saldo");
+		btnConsultSaldo = new JButton("Consultar Saldo");
 		btnConsultSaldo.setHorizontalAlignment(SwingConstants.LEFT);
 		btnConsultSaldo.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 9));
 		btnConsultSaldo.setBounds(10, 11, 119, 29);
+		btnConsultSaldo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				getSaldo(evt);
+			}
+		});
 		panel.add(btnConsultSaldo);
 		
-		JButton btnUltMov = new JButton("Ultimos Movimientos");
+		btnUltMov = new JButton("Ultimos Movimientos");
 		btnUltMov.setHorizontalAlignment(SwingConstants.LEFT);
 		btnUltMov.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 9));
 		btnUltMov.addActionListener(new ActionListener() {
@@ -107,10 +125,10 @@ public class ATMFrame {
 			}
 		});
 		
-		btnUltMov.setBounds(10, 60, 133, 29);
+		btnUltMov.setBounds(10, 74, 133, 29);
 		panel.add(btnUltMov);
 		
-		JScrollPane scrTabla = new JScrollPane();
+		scrTabla = new JScrollPane();
 		scrTabla.setBounds(153, 10, 521, 339);
 		panel.add(scrTabla);
 		
@@ -188,8 +206,15 @@ public class ATMFrame {
 		
 	}
 	
-	private void UltimosMovPorFecha(ActionEvent evt)  {
-	      this.UltMovFecha();      
+	private void getSaldo(ActionEvent evt)  {
+	      this.saldo();      
+	}
+	
+	private void saldo() {
+		String sql = "SELECT fecha, hora, tipo, monto, cod_caja, destino FROM ";
+		
+		refrescarTabla(sql);
+		
 	}
 	
 	
@@ -215,14 +240,14 @@ public class ATMFrame {
 	}
 	
 	
-	private void thisComponentShown(ComponentEvent evt) {
+	/*private void thisComponentShown(ComponentEvent evt) {
 	      this.conectarBD();
 	      
 	   }
 	   
 	   private void thisComponentHidden(ComponentEvent evt)  {
 	      this.desconectarBD();
-	   }
+	   }*/
 
 	   
 	   private void ultMov(ActionEvent evt)  {
@@ -233,9 +258,14 @@ public class ATMFrame {
 		   	this.refrescarTabla(sql);
 		   	
 	   }
+	   
+	   
+	   private void UltimosMovPorFecha(ActionEvent evt)  {
+		      this.UltMovFecha();      
+		}
 
 
-	   private void conectarBD() {
+	   /*private void conectarBD() {
 	      if (this.conexionBD == null) { 
 	         try{  
 	        	// Se carga y registra el driver JDBC de MySQL  
@@ -281,7 +311,7 @@ public class ATMFrame {
 	            System.out.println("VendorError: " + ex.getErrorCode());
 	         }
 	      }
-	   }
+	   }*/
 	   
 	   
 	   private void refrescarTabla(String sql) {
